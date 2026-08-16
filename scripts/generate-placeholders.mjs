@@ -32,11 +32,7 @@ function write(relative, content) {
   return relative;
 }
 
-write(
-  "favicon.svg",
-  `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">${gradient}
-  <rect width="128" height="128" rx="26" fill="#05080d"/>${mark}</svg>`,
-);
+/* favicon.png sa NEgeneruje — je to skutočná značka orezaná z public/logo 1 top.png */
 
 write(
   "logo.svg",
@@ -95,4 +91,4 @@ const created = IMAGES.map((item) => {
   return write(`images/${item.name}.svg`, placeholder(LABELS[item.name] ?? item.name, w, h));
 });
 
-console.log(["favicon.svg", "logo.svg", ...created].join("\n"));
+console.log(["logo.svg", ...created].join("\n"));

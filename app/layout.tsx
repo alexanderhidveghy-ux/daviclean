@@ -55,7 +55,10 @@ export const metadata: Metadata = {
   },
   robots: { index: true, follow: true },
   alternates: { canonical: site.url },
-  icons: { icon: "/favicon.svg" },
+  icons: {
+    icon: [{ url: "/favicon.png", type: "image/png", sizes: "180x180" }],
+    apple: "/favicon.png",
+  },
 };
 
 const jsonLd = {
@@ -68,7 +71,7 @@ const jsonLd = {
   url: site.url,
   telephone: site.phone,
   email: site.email,
-  image: `${site.url}/favicon.svg`,
+  image: `${site.url}/favicon.png`,
   priceRange: "€€",
   address: {
     "@type": "PostalAddress",

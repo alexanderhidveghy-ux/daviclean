@@ -73,7 +73,7 @@ export default function AboutPage() {
               </p>
             </div>
 
-            <div className="stats-grid" style={{ gridTemplateColumns: "1fr 1fr", marginTop: 16 }}>
+            <div className="stats-grid stats-centered" style={{ gridTemplateColumns: "1fr 1fr", marginTop: 16 }}>
               {stats.map((stat) => (
                 <div className="stat" key={stat.label}>
                   <span className="icon-badge">

@@ -66,10 +66,13 @@ export function Icon({ name, className }: { name: string; className?: string }) 
 export function Logo({ compact = false }: { compact?: boolean }) {
   return (
     <span className="logo">
-      <span className="logo-word">
-        DAVI<span>CLEAN</span>
+      <img className="logo-mark" src="/logo-mark.png" alt="" width={256} height={256} />
+      <span className="logo-text">
+        <span className="logo-word">
+          DAVI<span>CLEAN</span>
+        </span>
+        {!compact && <span className="logo-sub">Profesionálne čistenie</span>}
       </span>
-      {!compact && <span className="logo-sub">Profesionálne čistenie</span>}
     </span>
   );
 }

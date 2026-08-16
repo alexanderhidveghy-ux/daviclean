@@ -5,6 +5,7 @@ import { ArrowRight, Check, Clock, Phone } from "lucide-react";
 import { services, site } from "@/lib/site";
 import { photo } from "@/lib/images";
 import { CtaBand, Icon } from "@/components/ui";
+import { OrderButton } from "@/components/order-drawer";
 import { ServiceGrid } from "@/components/sections";
 import { Reveal } from "@/components/reveal";
 import { ContactForm } from "@/components/contact-form";
@@ -103,9 +104,9 @@ export default async function ServiceDetail({ params }: Props) {
             <a className="btn btn-primary btn-block" href={`tel:${site.phoneHref}`}>
               <Phone size={16} /> {site.phone}
             </a>
-            <Link className="btn btn-ghost btn-block" href="/kontakt" style={{ marginTop: 10 }}>
+            <OrderButton className="btn btn-ghost btn-block" service={service.title}>
               Poslať dopyt <ArrowRight size={15} />
-            </Link>
+            </OrderButton>
           </aside>
         </div>
       </section>

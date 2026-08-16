@@ -43,7 +43,12 @@ body {
   line-height: 1.62;
   letter-spacing: -0.006em;
   -webkit-font-smoothing: antialiased;
+  /* poistka proti vodorovnému pretečeniu; `clip` (nie `hidden`) nerozbíja position: sticky */
+  overflow-x: clip;
 }
+
+/* prvky mriežok sa musia vedieť zmenšiť pod šírku svojho obsahu */
+.service-grid > *, .adv-grid > *, .cat-strip > *, .steps-grid > *, .brand-grid > *, .price-grid > * { min-width: 0; }
 
 /* jemné zrno cez celú stránku — uberá plochosti tmavých plôch */
 body::after {
@@ -119,7 +124,16 @@ button { font: inherit; }
 .icon-badge svg { width: 22px; height: 22px; }
 
 /* ---------- logo ---------- */
-.logo { display: inline-flex; flex-direction: column; line-height: 1; }
+.logo { display: inline-flex; align-items: center; gap: 10px; line-height: 1; }
+/* Značka má natvrdo čierne pozadie (bez alfa kanála). `screen` ho na tmavom
+   podklade odstráni a `object-fit: cover` odreže prázdny okraj okolo kvapky,
+   takže značka pôsobí väčšia bez toho, aby zvýšila hlavičku. */
+.logo-mark {
+  width: 56px; height: 68px; flex: none;
+  object-fit: cover; object-position: 45% 50%;
+  mix-blend-mode: screen;
+}
+.logo-text { display: inline-flex; flex-direction: column; }
 .logo-word { font-family: var(--heading); font-weight: 800; font-size: 26px; letter-spacing: -0.055em; color: #fff; }
 .logo-word span { color: var(--blue); }
 .logo-sub { margin-top: 5px; font-family: var(--mono); color: var(--muted-2); font-size: 8px; font-weight: 500; letter-spacing: 0.3em; text-transform: uppercase; }
@@ -127,7 +141,8 @@ button { font: inherit; }
 /* ---------- hlavička ---------- */
 .site-header {
   position: fixed; inset: 0 0 auto 0; z-index: 50;
-  background: rgba(5, 8, 13, 0.78); backdrop-filter: blur(20px) saturate(140%);
+  /* čisto čierna (nie priehľadná) — značka má čierne pozadie a takto splynie bez švíku */
+  background: #000;
   border-bottom: 1px solid var(--line);
   animation: header-enter 600ms cubic-bezier(0.2, 0.75, 0.25, 1) both;
 }
@@ -276,6 +291,13 @@ button { font: inherit; }
 .detail-photo { margin-bottom: 28px; border: 1px solid var(--line); border-radius: 18px; overflow: hidden; }
 .detail-photo img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; }
 
+/* jednoduchá textová karta (bez fotky) — .service-card má padding v .service-body */
+.info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px; }
+.info-grid > * { min-width: 0; }
+.info-card { padding: 26px 24px; }
+.info-card h3 { margin: 0 0 10px; font-size: 18px; letter-spacing: -0.035em; }
+.info-card p { margin: 0; color: var(--muted); font-size: 13.5px; }
+
 /* ---------- výhody ---------- */
 .adv-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; }
 .adv-card { padding: 24px 20px; }
@@ -285,15 +307,24 @@ button { font: inherit; }
 /* ---------- čísla ---------- */
 .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
 .stat {
-  display: flex; align-items: center; gap: 16px; padding: 22px 24px;
+  display: flex; align-items: center; gap: 16px; padding: 22px 24px; min-width: 0;
   border: 1px solid transparent; border-radius: 16px;
   background: var(--card-bg) padding-box, var(--card-edge) border-box; box-shadow: var(--inner-light);
 }
+/* bez min-width: 0 sa bunky mriežky odmietnu zmenšiť pod šírku obsahu → vodorovné pretečenie */
+.stat > div { min-width: 0; }
 .stat strong {
   display: block; font-family: var(--mono); font-variant-numeric: tabular-nums;
   font-size: clamp(23px, 2.2vw, 30px); font-weight: 700; letter-spacing: -0.04em;
+  /* `anywhere` (na rozdiel od `break-word`) znižuje aj min-content šírku bunky */
+  overflow-wrap: anywhere;
 }
-.stat span { color: var(--muted); font-size: 12.5px; }
+/* pozor na `.stat span` — sedelo by aj na .icon-badge (tiež <span>) a prepísalo
+   by mu display: grid, čím by sa ikona prestala centrovať vo svojom štvorčeku */
+.stat > div span { display: block; color: var(--muted); font-size: 12.5px; overflow-wrap: anywhere; }
+/* varianta so zvislým usporiadaním a vycentrovaním — široké karty na /o-nas */
+.stats-centered .stat { flex-direction: column; text-align: center; gap: 12px; padding: 26px 20px; }
+.stats-centered .stat > div { display: grid; gap: 4px; }
 
 /* ---------- rady značky ---------- */
 .brand-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
@@ -412,6 +443,8 @@ a.contact-row:hover { background: var(--card-bg) padding-box, var(--card-edge-ho
 .field textarea { min-height: 118px; resize: vertical; }
 .field input:focus, .field select:focus, .field textarea:focus { outline: none; border-color: var(--blue); background: rgba(31, 139, 255, 0.06); }
 .field select option { background: #0d141d; }
+/* honeypot — skrytý bez posúvania mimo plátno, aby neovplyvňoval rozmery stránky */
+.hp { position: absolute; width: 1px; height: 1px; padding: 0; border: 0; opacity: 0; pointer-events: none; clip-path: inset(50%); }
 .form-consent { display: flex; gap: 10px; align-items: flex-start; margin-top: 16px; color: var(--muted); font-size: 12.5px; line-height: 1.5; }
 .form-consent input { margin-top: 3px; accent-color: var(--blue); }
 .form-status { margin-top: 14px; padding: 13px 16px; border-radius: 11px; font-size: 14px; }
@@ -462,8 +495,11 @@ a.contact-row:hover { background: var(--card-bg) padding-box, var(--card-edge-ho
 .page-hero + .section, .hero + .section { padding-top: clamp(34px, 3.4vw, 50px); }
 
 .detail-layout { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: clamp(32px, 4vw, 64px); align-items: start; }
-.detail-body h2 { font-size: clamp(25px, 2.7vw, 36px); letter-spacing: -0.04em; margin: 34px 0 16px; }
-.detail-body h2:first-child { margin-top: 0; }
+.detail-body h2 { font-size: clamp(25px, 2.7vw, 36px); letter-spacing: -0.04em; margin: clamp(32px, 3.4vw, 46px) 0 16px; }
+/* Nulujeme len naozaj prvý nadpis stránky. Pozor: samotné `h2:first-child` sedelo
+   na KAŽDÝ nadpis, lebo každý blok má vlastný obal <Reveal> — preto chýbali medzery. */
+.detail-body > h2:first-child,
+.detail-body > :first-child h2:first-child { margin-top: 0; }
 .detail-body p { color: var(--muted); }
 .check-list { display: grid; gap: 11px; margin: 8px 0 0; }
 .check-list li { display: flex; gap: 11px; align-items: flex-start; color: #c6d2e0; font-size: 15px; }
@@ -482,10 +518,10 @@ a.contact-row:hover { background: var(--card-bg) padding-box, var(--card-edge-ho
 }
 .aside-card h3 { font-size: 21px; letter-spacing: -0.04em; margin-bottom: 8px; }
 .aside-card p { color: var(--muted); font-size: 14px; }
-.aside-price { display: flex; align-items: baseline; gap: 9px; margin: 16px 0; padding: 14px 0; border-block: 1px solid var(--line); }
-.aside-price strong { font-family: var(--mono); font-variant-numeric: tabular-nums; font-size: 27px; font-weight: 700; color: var(--blue-bright); letter-spacing: -0.04em; }
-.aside-price span { font-family: var(--mono); color: var(--muted); font-size: 11px; }
-.aside-card .btn { margin-top: 6px; }
+.aside-price { margin: 16px 0; padding: 14px 0; border-block: 1px solid var(--line); }
+.aside-price strong { display: block; font-family: var(--mono); font-variant-numeric: tabular-nums; font-size: 27px; font-weight: 700; color: var(--blue-bright); letter-spacing: -0.04em; }
+.aside-price span { display: block; margin-top: 7px; font-family: var(--mono); color: var(--muted); font-size: 11px; }
+.aside-card .btn { margin-top: 10px; }
 
 /* ---------- pätička ---------- */
 .site-footer { border-top: 1px solid var(--line); background: var(--bg-2); padding: clamp(50px, 6vw, 76px) 0 0; }
@@ -534,8 +570,11 @@ a.contact-row:hover { background: var(--card-bg) padding-box, var(--card-edge-ho
   background: rgba(3, 6, 10, 0.66); backdrop-filter: blur(4px);
   animation: backdrop-in 300ms ease both;
 }
-.drawer-backdrop.is-closing { animation: backdrop-in 260ms ease both reverse; }
+/* zatváracia animácia MUSÍ mať vlastný názov keyframes — pri zhodnom názve
+   prehliadač nespustí novú animáciu a `animationend` už nikdy nepríde */
+.drawer-backdrop.is-closing { animation: backdrop-out 240ms ease both; }
 @keyframes backdrop-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes backdrop-out { from { opacity: 1; } to { opacity: 0; } }
 
 .drawer {
   position: fixed; top: 0; right: 0; z-index: 91;
@@ -544,9 +583,10 @@ a.contact-row:hover { background: var(--card-bg) padding-box, var(--card-edge-ho
   box-shadow: -34px 0 90px rgba(0, 0, 0, 0.65);
   animation: drawer-in 380ms cubic-bezier(0.2, 0.75, 0.25, 1) both;
 }
-.drawer.is-closing { animation: drawer-in 280ms cubic-bezier(0.4, 0, 1, 1) both reverse; }
+.drawer.is-closing { animation: drawer-out 260ms cubic-bezier(0.4, 0, 1, 1) both; }
 .drawer:focus { outline: none; }
 @keyframes drawer-in { from { transform: translateX(100%); } to { transform: none; } }
+@keyframes drawer-out { from { transform: none; } to { transform: translateX(100%); } }
 
 .drawer-photo { position: relative; aspect-ratio: 16 / 9; overflow: hidden; background: var(--panel-3); }
 .drawer-photo img { width: 100%; height: 100%; object-fit: cover; }
@@ -655,6 +695,7 @@ a.contact-row:hover { background: var(--card-bg) padding-box, var(--card-edge-ho
   html { scroll-behavior: auto; }
   .site-header, .route-fade { animation: none; }
   .marquee-track { animation: none; }
+  .drawer, .drawer.is-closing, .drawer-backdrop, .drawer-backdrop.is-closing { animation: none; }
   .reveal, .reveal.is-visible { opacity: 1; transform: none; transition: none; }
 }
 
@@ -675,8 +716,8 @@ a.contact-row:hover { background: var(--card-bg) padding-box, var(--card-edge-ho
   .desktop-nav { display: none; }
   .menu-button { display: grid; place-items: center; }
   .mobile-nav { display: grid; gap: 2px; padding: 8px 0 20px; border-top: 1px solid var(--line); max-height: 72vh; overflow-y: auto; }
-  .mobile-nav a { padding: 13px 4px; border-bottom: 1px solid var(--line); font-size: 15px; color: #c3cfdd; }
-  .mobile-nav .btn { margin-top: 14px; }
+  .mobile-nav > a { padding: 13px 4px; border-bottom: 1px solid var(--line); font-size: 15px; color: #c3cfdd; }
+  .mobile-nav-cta { display: grid; gap: 10px; padding: 14px 0 18px; }
   .hero-inner { grid-template-columns: 1fr; }
   .hero-visual { max-width: 560px; }
   .steps-grid { grid-template-columns: repeat(2, 1fr); }
@@ -688,12 +729,21 @@ a.contact-row:hover { background: var(--card-bg) padding-box, var(--card-edge-ho
 
 @media (max-width: 720px) {
   body { padding-top: 112px; font-size: 15.5px; }
+  .logo { gap: 8px; }
+  .logo-mark { width: 46px; height: 58px; }
+  .logo-word { font-size: 21px; }
   .top-strip { gap: 14px; font-size: 10px; padding-inline: 12px; }
   .top-strip .hide-sm { display: none; }
   .cat-strip, .adv-grid, .price-grid, .brand-grid, .steps-grid, .form-grid, .reason-grid, .footer-grid, .gallery-grid { grid-template-columns: 1fr; }
   .service-grid { grid-template-columns: 1fr; }
   .service-grid.bento, .service-grid.bento > *, .service-grid.bento > *:nth-child(-n + 2) { grid-template-columns: 1fr; grid-column: auto; }
-  .stats-grid { grid-template-columns: 1fr 1fr; }
+  /* auto-fit spadne na jeden stĺpec sám, keď sa dva už nezmestia */
+  .stats-grid { grid-template-columns: repeat(auto-fit, minmax(158px, 1fr)); }
+  .stat { gap: 12px; padding: 16px 14px; }
+  .stat .icon-badge { width: 38px; height: 38px; border-radius: 10px; }
+  .stat .icon-badge svg { width: 18px; height: 18px; }
+  .stat strong { font-size: 20px; }
+  .stat > div span { font-size: 11.5px; line-height: 1.35; }
   .hero-badge { left: 12px; bottom: 12px; }
   .cta-band { flex-direction: column; align-items: flex-start; }
   .cta-band h2 { max-width: none; }

@@ -19,7 +19,8 @@ import {
 } from "@/lib/site";
 import { ContactForm } from "@/components/contact-form";
 
-type DrawerContext = { open: () => void; close: () => void };
+/** `open` vie voliteľne predvyplniť službu vo formulári v paneli. */
+type DrawerContext = { open: (service?: string) => void; close: () => void };
 
 const Ctx = createContext<DrawerContext | null>(null);
 
@@ -33,13 +34,26 @@ export function useOrderDrawer() {
 export function OrderButton({
   children,
   className = "btn btn-primary",
+  onClick,
+  service,
 }: {
   children: React.ReactNode;
   className?: string;
+  /** spustí sa pred otvorením panela — napr. na zatvorenie mobilného menu */
+  onClick?: () => void;
+  /** predvyplní službu vo formulári — používajú to detaily služieb */
+  service?: string;
 }) {
   const { open } = useOrderDrawer();
   return (
-    <button type="button" className={className} onClick={open}>
+    <button
+      type="button"
+      className={className}
+      onClick={() => {
+        onClick?.();
+        open(service);
+      }}
+    >
       {children}
     </button>
   );
@@ -175,7 +189,15 @@ function Calculator({ onSummary }: { onSummary: (summary: string, total: number)
   );
 }
 
-function Drawer({ image, onClose }: { image: string; onClose: () => void }) {
+function Drawer({
+  image,
+  service,
+  onClose,
+}: {
+  image: string;
+  service?: string;
+  onClose: () => void;
+}) {
   const [closing, setClosing] = useState(false);
   const [summary, setSummary] = useState("");
   const panelRef = useRef<HTMLDivElement>(null);
@@ -196,14 +218,23 @@ function Drawer({ image, onClose }: { image: string; onClose: () => void }) {
     };
   }, [requestClose]);
 
+  /* poistka: keby `animationend` neprišiel (vypnuté animácie, prepnutá záložka),
+     panel sa zavrie aj tak — nikdy nesmie zostať visieť otvorený */
+  useEffect(() => {
+    if (!closing) return;
+    const timer = setTimeout(onClose, 400);
+    return () => clearTimeout(timer);
+  }, [closing, onClose]);
+
   const handleSummary = useCallback((value: string) => setSummary(value), []);
 
   return (
     <div
       className={`drawer-backdrop${closing ? " is-closing" : ""}`}
       onClick={requestClose}
-      onAnimationEnd={() => {
-        if (closing) onClose();
+      onAnimationEnd={(e) => {
+        // len vlastná animácia pozadia, nie animácie potomkov
+        if (closing && e.target === e.currentTarget) onClose();
       }}
     >
       <aside
@@ -251,7 +282,7 @@ function Drawer({ image, onClose }: { image: string; onClose: () => void }) {
           <Calculator onSummary={handleSummary} />
 
           <h3>Nezáväzný dopyt</h3>
-          <ContactForm summary={summary} />
+          <ContactForm summary={summary} preselect={service} />
         </div>
       </aside>
     </div>
@@ -266,9 +297,16 @@ export function OrderDrawerProvider({
   children: React.ReactNode;
 }) {
   const [mounted, setMounted] = useState(false);
+  const [service, setService] = useState<string | undefined>();
 
   const value = useMemo<DrawerContext>(
-    () => ({ open: () => setMounted(true), close: () => setMounted(false) }),
+    () => ({
+      open: (preselect?: string) => {
+        setService(preselect);
+        setMounted(true);
+      },
+      close: () => setMounted(false),
+    }),
     [],
   );
 
@@ -285,7 +323,7 @@ export function OrderDrawerProvider({
   return (
     <Ctx.Provider value={value}>
       {children}
-      {mounted && <Drawer image={image} onClose={() => setMounted(false)} />}
+      {mounted && <Drawer image={image} service={service} onClose={() => setMounted(false)} />}
     </Ctx.Provider>
   );
 }

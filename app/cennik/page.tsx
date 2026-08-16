@@ -54,7 +54,7 @@ export default function PricingPage() {
             highlight="„od“"
             lead="Rovnako veľká sedačka môže znamenať hodinu alebo tri. Cenu ovplyvňuje najmä stupeň znečistenia, typ materiálu a dostupnosť."
           />
-          <div className="service-grid">
+          <div className="info-grid">
             {[
               {
                 title: "Stupeň znečistenia",
@@ -73,9 +73,9 @@ export default function PricingPage() {
                 text: "Poschodie bez výťahu, obmedzený prístup k vode či elektrine alebo práca mimo pracovných hodín.",
               },
             ].map((item) => (
-              <div className="card service-card" key={item.title}>
-                <h3 style={{ marginTop: 0 }}>{item.title}</h3>
-                <p style={{ marginBottom: 0 }}>{item.text}</p>
+              <div className="card info-card" key={item.title}>
+                <h3>{item.title}</h3>
+                <p>{item.text}</p>
               </div>
             ))}
           </div>

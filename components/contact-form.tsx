@@ -100,14 +100,7 @@ export function ContactForm({
       </div>
 
       {/* jednoduchá pasca na roboty */}
-      <input
-        type="text"
-        name="web"
-        tabIndex={-1}
-        autoComplete="off"
-        aria-hidden="true"
-        style={{ position: "absolute", left: "-9999px", width: 1, height: 1, opacity: 0 }}
-      />
+      <input type="text" name="web" tabIndex={-1} autoComplete="off" aria-hidden="true" className="hp" />
 
       {summary && (
         <div className="form-summary">

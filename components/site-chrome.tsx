@@ -78,7 +78,17 @@ function Header() {
 
       {open && (
         <div className="wrap">
-          <nav className="mobile-nav">
+          {/* onClick na odkazoch: pathname sa nezmení pri kliku na aktuálnu stránku,
+              takže samotný useEffect vyššie by menu nezavrel */}
+          <nav className="mobile-nav" onClick={() => setOpen(false)}>
+            <div className="mobile-nav-cta">
+              <OrderButton className="btn btn-primary btn-block" onClick={() => setOpen(false)}>
+                Objednať čistenie
+              </OrderButton>
+              <a className="btn btn-ghost btn-block" href={`tel:${site.phoneHref}`}>
+                <Phone size={16} /> {site.phone}
+              </a>
+            </div>
             {nav.map((item) => (
               <Link key={item.href} href={item.href}>
                 {item.label}
@@ -89,10 +99,6 @@ function Header() {
                 {s.title}
               </Link>
             ))}
-            <OrderButton className="btn btn-primary btn-block">Objednať čistenie</OrderButton>
-            <a className="btn btn-ghost btn-block" href={`tel:${site.phoneHref}`} style={{ marginTop: 10 }}>
-              <Phone size={16} /> {site.phone}
-            </a>
           </nav>
         </div>
       )}
