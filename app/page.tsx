@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, Check, MapPin, Phone, ShieldCheck } from "lucide-react";
+import { ArrowRight, Check, Mail, MapPin, ShieldCheck } from "lucide-react";
 import {
   advantages,
   categories,
@@ -56,8 +56,8 @@ export default function HomePage() {
                 <OrderButton className="btn btn-primary">
                   Objednať čistenie <ArrowRight size={16} />
                 </OrderButton>
-                <a className="btn btn-ghost" href={`tel:${site.phoneHref}`}>
-                  <Phone size={16} /> {site.phone}
+                <a className="btn btn-ghost" href={`mailto:${site.email}`}>
+                  <Mail size={16} /> {site.email}
                 </a>
               </div>
               <p className="hero-place">
@@ -318,15 +318,6 @@ export default function HomePage() {
               zvyčajne do niekoľkých hodín.
             </p>
             <div className="contact-list">
-              <a className="contact-row" href={`tel:${site.phoneHref}`}>
-                <span className="icon-badge">
-                  <Icon name="phone" />
-                </span>
-                <span>
-                  <small>Telefón</small>
-                  <strong>{site.phone}</strong>
-                </span>
-              </a>
               <a className="contact-row" href={`mailto:${site.email}`}>
                 <span className="icon-badge">
                   <Icon name="mail" />

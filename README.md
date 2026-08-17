@@ -62,7 +62,9 @@ lib/site.ts                    VŠETOK obsah a kontakty na jednom mieste
 ## Čo treba doplniť pred spustením
 
 1. **Kontakty a firemné údaje** — `lib/site.ts` (`site`): telefón, e-mail, adresa,
-   IČO/DIČ. Momentálne sú tam údaje z vizuálu (+421 910 123 456), teda placeholdery.
+   IČO/DIČ. `phone`, `phoneHref`, `contactPerson` a `contactRole` sú **zámerne prázdne** —
+   web ich potom všade skryje a namiesto telefónu ponúka e-mail a objednávkový panel.
+   Po doplnení hodnoty sa telefón sám vráti do hlavičky, pätičky, kontaktu aj JSON-LD.
 2. **Ceny** — `lib/site.ts` (`pricing`, `services[].priceFrom`). Sú nastavené na
    bežnú trhovú úroveň v Bratislave, ale treba ich potvrdiť.
 3. **Fotky** — pozri sekciu *Fotky* nižšie (teraz sú tam dočasné SVG placeholdery).
@@ -129,6 +131,48 @@ Placeholdery sa dajú kedykoľvek pregenerovať cez `node scripts/generate-place
 > **Pozor pri AI fotkách:** nepoužívajte zábery, na ktorých je rozpoznateľná tvár
 > alebo cudzie logo, a na `/referencie` ich neprezentujte ako skutočné realizácie —
 > je to zavádzajúce voči zákazníkom. Ideálne ich čo najskôr nahradiť reálnymi fotkami z práce.
+
+## Cenová ponuka z fotky (`/cenova-ponuka`)
+
+Zákazník odfotí alebo nahrá fotku, my ju pošleme do OpenAI vision modelu a vrátime
+predmet, mieru znečistenia, odporúčanú službu, orientačnú cenu a trvanie. Výsledok sa
+automaticky pripojí k dopytu, takže v e-maile vidíte, čo model usúdil.
+
+- **Fotoaparát na mobile** — druhý `<input capture="environment">` otvorí rovno foťák.
+- **Zmenšenie v prehliadači** — fotka sa cez canvas zmenší na 1024 px / JPEG 82 %.
+  Z mobilu tak nejde 8 MB súbor, ale ~150 kB. Rýchlejšie aj lacnejšie na tokeny.
+- Ceny v prompte sa berú zo `services` v `lib/site.ts`, takže odhad nikdy nevybočí z cenníka.
+
+### Kľúč a model
+
+```bash
+# .env.local — NIKDY necommitovať (je v .gitignore)
+OPENAI_API_KEY=sk-proj-…
+OPENAI_MODEL=gpt-5.4-mini
+```
+
+Kľúč sa používa výhradne na serveri v `app/api/analyza-fotky/route.ts`. Nikdy ho nedávajte
+do premennej s prefixom `NEXT_PUBLIC_` — tá sa zabuduje do JavaScriptu v prehliadači
+a ktokoľvek si ju prečíta.
+
+### Ochrana kreditu
+
+Endpoint volá platené API, preto má v [`lib/rate-limit.ts`](lib/rate-limit.ts) štyri vrstvy:
+
+| Vrstva | Limit |
+|---|---|
+| Odstup medzi volaniami z jednej IP | 15 sekúnd |
+| Na IP za hodinu | 3 analýzy |
+| Na IP za deň | 10 analýz |
+| Všetci dokopy za deň | 200 analýz |
+
+K tomu kontrola typu súboru (JPG/PNG/WEBP), limit 6 MB a `detail: "low"`, čo drží
+spotrebu na ~130 tokenov na fotku.
+
+> **Dôležité pri nasadení:** počítadlá žijú v pamäti procesu. Na Verceli beží viac
+> serverless inštancií a každá má vlastné počítadlo, takže reálny limit môže byť
+> násobne vyšší. Pri ostrej prevádzke presuňte limiter do Redisu (Upstash) a v OpenAI
+> účte si nastavte **mesačný strop výdavkov** — to je jediná skutočne tvrdá poistka.
 
 ## Odosielanie formulára
 

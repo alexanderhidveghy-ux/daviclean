@@ -69,7 +69,7 @@ const jsonLd = {
   description:
     "Profesionálne hĺbkové čistenie — tepovanie sedačiek, matracov a kobercov, čistenie interiérov áut, ozónovanie, tlakové čistenie a porealizačné upratovanie.",
   url: site.url,
-  telephone: site.phone,
+  ...(site.phone ? { telephone: site.phone } : {}),
   email: site.email,
   image: `${site.url}/favicon.png`,
   priceRange: "€€",

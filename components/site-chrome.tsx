@@ -3,14 +3,19 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Clock, Mail, MapPin, Menu, Phone, X } from "lucide-react";
+import { Clock, Mail, MapPin, Menu, Phone, Send, X } from "lucide-react";
 import { services, site } from "@/lib/site";
 import { Icon, Logo } from "@/components/ui";
 import { OrderButton, OrderDrawerProvider } from "@/components/order-drawer";
+import {
+  CookieConsentProvider,
+  CookieSettingsButton,
+} from "@/components/cookie-consent";
 
 const nav = [
   { href: "/sluzby", label: "Služby" },
   { href: "/cennik", label: "Cenník" },
+  { href: "/cenova-ponuka", label: "Cenová ponuka" },
   { href: "/o-nas", label: "O nás" },
   { href: "/referencie", label: "Referencie" },
   { href: "/kontakt", label: "Kontakt" },
@@ -27,10 +32,12 @@ function Header() {
   return (
     <header className="site-header">
       <div className="top-strip">
-        <a href={`tel:${site.phoneHref}`}>
-          <Phone /> {site.phone}
-        </a>
-        <a href={`mailto:${site.email}`} className="hide-sm">
+        {site.phone && (
+          <a href={`tel:${site.phoneHref}`}>
+            <Phone /> {site.phone}
+          </a>
+        )}
+        <a href={`mailto:${site.email}`}>
           <Mail /> {site.email}
         </a>
         <span className="hide-sm">
@@ -60,9 +67,15 @@ function Header() {
               {item.label}
             </Link>
           ))}
-          <a className="nav-phone" href={`tel:${site.phoneHref}`}>
-            <Phone /> {site.phone}
-          </a>
+          {site.phone ? (
+            <a className="nav-phone" href={`tel:${site.phoneHref}`}>
+              <Phone /> {site.phone}
+            </a>
+          ) : (
+            <a className="nav-phone" href={`mailto:${site.email}`}>
+              <Mail /> {site.email}
+            </a>
+          )}
           <OrderButton className="btn btn-primary btn-sm">Objednať</OrderButton>
         </nav>
 
@@ -85,9 +98,15 @@ function Header() {
               <OrderButton className="btn btn-primary btn-block" onClick={() => setOpen(false)}>
                 Objednať čistenie
               </OrderButton>
-              <a className="btn btn-ghost btn-block" href={`tel:${site.phoneHref}`}>
-                <Phone size={16} /> {site.phone}
-              </a>
+              {site.phone ? (
+                <a className="btn btn-ghost btn-block" href={`tel:${site.phoneHref}`}>
+                  <Phone size={16} /> {site.phone}
+                </a>
+              ) : (
+                <a className="btn btn-ghost btn-block" href={`mailto:${site.email}`}>
+                  <Mail size={16} /> {site.email}
+                </a>
+              )}
             </div>
             {nav.map((item) => (
               <Link key={item.href} href={item.href}>
@@ -135,6 +154,7 @@ function Footer() {
             <div className="footer-links">
               <Link href="/sluzby">Všetky služby</Link>
               <Link href="/cennik">Cenník</Link>
+              <Link href="/cenova-ponuka">Cenová ponuka z fotky</Link>
               <Link href="/o-nas">O nás</Link>
               <Link href="/referencie">Referencie</Link>
               <Link href="/faq">Časté otázky</Link>
@@ -145,9 +165,11 @@ function Footer() {
           <div>
             <h4>Kontakt</h4>
             <div className="footer-contact">
-              <a href={`tel:${site.phoneHref}`}>
-                <Phone /> {site.phone}
-              </a>
+              {site.phone && (
+                <a href={`tel:${site.phoneHref}`}>
+                  <Phone /> {site.phone}
+                </a>
+              )}
               <a href={`mailto:${site.email}`}>
                 <Mail /> {site.email}
               </a>
@@ -167,46 +189,12 @@ function Footer() {
           </span>
           <nav>
             <Link href="/ochrana-osobnych-udajov">Ochrana osobných údajov</Link>
+            <CookieSettingsButton />
             <Link href="/kontakt">Napíšte nám</Link>
           </nav>
         </div>
       </div>
     </footer>
-  );
-}
-
-function CookieBar() {
-  const [show, setShow] = useState(false);
-
-  useEffect(() => {
-    try {
-      if (!localStorage.getItem("daviclean-cookies")) setShow(true);
-    } catch {
-      /* localStorage nemusí byť dostupný */
-    }
-  }, []);
-
-  if (!show) return null;
-
-  return (
-    <div className="cookie-bar" role="dialog" aria-label="Súhlas s cookies">
-      <span>
-        Používame nevyhnutné cookies pre správne fungovanie webu. Pokračovaním súhlasíte s ich
-        použitím.
-      </span>
-      <button
-        onClick={() => {
-          try {
-            localStorage.setItem("daviclean-cookies", "1");
-          } catch {
-            /* ignorujeme */
-          }
-          setShow(false);
-        }}
-      >
-        Rozumiem
-      </button>
-    </div>
   );
 }
 
@@ -219,17 +207,24 @@ export function SiteChrome({
 }) {
   const pathname = usePathname();
   return (
-    <OrderDrawerProvider image={drawerImage}>
+    <CookieConsentProvider>
+      <OrderDrawerProvider image={drawerImage}>
       <Header />
       {/* key vynúti remount pri zmene routy → prehrá sa nábehová animácia */}
       <main key={pathname} className="route-fade">
         {children}
       </main>
       <Footer />
-      <a className="float-call" href={`tel:${site.phoneHref}`} aria-label="Zavolať">
-        <Phone />
-      </a>
-      <CookieBar />
-    </OrderDrawerProvider>
+      {site.phone ? (
+        <a className="float-call" href={`tel:${site.phoneHref}`} aria-label="Zavolať">
+          <Phone />
+        </a>
+      ) : (
+        <OrderButton className="float-call">
+          <Send />
+        </OrderButton>
+      )}
+      </OrderDrawerProvider>
+    </CookieConsentProvider>
   );
 }

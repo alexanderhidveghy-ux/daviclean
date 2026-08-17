@@ -38,8 +38,8 @@ export default function FaqPage() {
             Časté <span style={{ color: "var(--blue)" }}>otázky</span>
           </h1>
           <p className="lead">
-            Ceny, termíny, schnutie, bezpečnosť prostriedkov. Ak tu odpoveď nenájdete, zavolajte
-            nám na {site.phone}.
+            Ceny, termíny, schnutie, bezpečnosť prostriedkov. Ak tu odpoveď nenájdete, napíšte
+            nám na {site.email}.
           </p>
         </div>
       </section>

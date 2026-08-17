@@ -49,7 +49,7 @@ export async function POST(request: Request) {
     `Miesto: ${text(body.miesto) || "—"}`,
     "",
     text(body.sprava),
-    ...(kalkulacia ? ["", "--- Kalkulácia z webu ---", kalkulacia] : []),
+    ...(kalkulacia ? ["", "--- Podklad z webu ---", kalkulacia] : []),
   ].join("\n");
 
   const apiKey = process.env.RESEND_API_KEY;
@@ -87,7 +87,7 @@ export async function POST(request: Request) {
   } catch (error) {
     console.error("[daviclean] Odoslanie dopytu zlyhalo:", error);
     return NextResponse.json(
-      { error: `Odoslanie zlyhalo. Zavolajte nám prosím na ${site.phone}.` },
+      { error: `Odoslanie zlyhalo. Napíšte nám prosím na ${site.email}.` },
       { status: 500 },
     );
   }

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { site } from "@/lib/site";
+import { CookieSettingsButton } from "@/components/cookie-consent";
 
 export const metadata: Metadata = {
   title: "Ochrana osobných údajov",
@@ -26,7 +27,8 @@ export default function PrivacyPage() {
           <h2>Prevádzkovateľ</h2>
           <p>
             {site.legalName}, {site.address.street}, {site.address.zip} {site.address.city}, IČO:{" "}
-            {site.ico}. Kontakt: {site.email}, {site.phone}.
+            {site.ico}. Kontakt: {site.email}
+            {site.phone ? `, ${site.phone}` : ""}.
           </p>
 
           <h2>Aké údaje spracúvame</h2>
@@ -58,7 +60,14 @@ export default function PrivacyPage() {
           </p>
 
           <h2>Cookies</h2>
-          <p>
+          <p style={{ marginBottom: 20 }}>
+            Svoje nastavenie cookies môžete kedykoľvek zmeniť — stačí otvoriť panel nižšie
+            a prepínače uložiť. Zmena platí okamžite.
+          </p>
+          <CookieSettingsButton className="btn btn-ghost">
+            Zmeniť nastavenia cookies
+          </CookieSettingsButton>
+          <p style={{ marginTop: 24 }}>
             Web používa iba nevyhnutné technické cookies potrebné na jeho správne fungovanie
             a uloženie vášho súhlasu. Nepoužívame reklamné ani profilovacie cookies.
           </p>

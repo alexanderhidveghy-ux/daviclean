@@ -9,11 +9,16 @@ export const site = {
   claim: "Profesionálne čistenie",
   slogan: "Čistota, ktorá je vidieť.",
   url: "https://www.daviclean.sk",
-  phone: "+421 910 123 456",
-  phoneHref: "+421910123456",
+  /**
+   * Telefón a kontaktná osoba sú dočasne prázdne — web ich potom všade skryje.
+   * Po doplnení hodnoty sa automaticky zobrazia späť (hlavička, pätička,
+   * kontakt, panel, JSON-LD). Netreba meniť nič iné.
+   */
+  phone: "",
+  phoneHref: "",
   email: "info@daviclean.sk",
-  contactPerson: "David Slovák",
-  contactRole: "konateľ / CEO",
+  contactPerson: "",
+  contactRole: "",
   region: "Bratislava a okolie",
   address: {
     street: "Doplňte ulicu a číslo",

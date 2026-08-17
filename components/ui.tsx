@@ -128,12 +128,12 @@ export function CtaBand({
         <p>{text}</p>
       </div>
       <div className="cta-actions">
-        <a className="btn btn-primary" href={`tel:${site.phoneHref}`}>
-          <Phone size={17} /> {site.phone}
-        </a>
-        <OrderButton className="btn btn-ghost">
-          Nezáväzná ponuka <ArrowRight size={16} />
+        <OrderButton className="btn btn-primary">
+          Objednať čistenie <ArrowRight size={16} />
         </OrderButton>
+        <a className="btn btn-ghost" href={`mailto:${site.email}`}>
+          <Mail size={17} /> {site.email}
+        </a>
       </div>
     </div>
   );

@@ -9,10 +9,12 @@ type State = "idle" | "sending" | "ok" | "err";
 export function ContactForm({
   preselect,
   summary,
+  summaryLabel = "Z kalkulačky",
 }: {
   preselect?: string;
-  /** Zhrnutie z kalkulačky — pošle sa spolu s dopytom */
+  /** Zhrnutie (kalkulačka alebo posúdenie fotky) — pošle sa spolu s dopytom */
   summary?: string;
+  summaryLabel?: string;
 }) {
   const [state, setState] = useState<State>("idle");
   const [message, setMessage] = useState("");
@@ -104,7 +106,7 @@ export function ContactForm({
 
       {summary && (
         <div className="form-summary">
-          <strong>Z kalkulačky</strong>
+          <strong>{summaryLabel}</strong>
           <pre>{summary}</pre>
         </div>
       )}

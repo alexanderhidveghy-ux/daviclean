@@ -64,12 +64,11 @@ export default function AboutPage() {
 
           <div>
             <div className="card" style={{ padding: 32 }}>
-              <span className="eyebrow">Kontaktná osoba</span>
-              <h3 style={{ fontSize: 26, fontWeight: 800 }}>{site.contactPerson}</h3>
-              <p style={{ color: "var(--muted)", marginTop: 6 }}>{site.contactRole}</p>
-              <p style={{ color: "var(--muted)", marginTop: 18, marginBottom: 0 }}>
-                „Na obhliadku chodím osobne. Radšej poviem dopredu, čo sa dá a čo nie — zákazník
-                tak vie, za čo platí, a nikto nie je na konci sklamaný.“
+              <span className="eyebrow">Ako to u nás chodí</span>
+              <h3 style={{ fontSize: 26, fontWeight: 800 }}>Bez prekvapení na konci</h3>
+              <p style={{ color: "var(--muted)", marginTop: 14, marginBottom: 0 }}>
+                Na obhliadku chodíme osobne. Radšej dopredu povieme, čo sa dá a čo nie — zákazník
+                tak vie, za čo platí, a nikto nie je na konci sklamaný.
               </p>
             </div>
 

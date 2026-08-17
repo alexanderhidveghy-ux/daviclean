@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowRight, Check, Clock, Phone } from "lucide-react";
+import { ArrowRight, Check, Clock, Mail } from "lucide-react";
 import { services, site } from "@/lib/site";
 import { photo } from "@/lib/images";
 import { CtaBand, Icon } from "@/components/ui";
@@ -101,12 +101,12 @@ export default async function ServiceDetail({ params }: Props) {
             <p style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 13.5 }}>
               <Clock size={16} color="#52a8ff" /> Trvanie: {service.duration}
             </p>
-            <a className="btn btn-primary btn-block" href={`tel:${site.phoneHref}`}>
-              <Phone size={16} /> {site.phone}
-            </a>
-            <OrderButton className="btn btn-ghost btn-block" service={service.title}>
+            <OrderButton className="btn btn-primary btn-block" service={service.title}>
               Poslať dopyt <ArrowRight size={15} />
             </OrderButton>
+            <a className="btn btn-ghost btn-block" href={`mailto:${site.email}`} style={{ marginTop: 10 }}>
+              <Mail size={16} /> {site.email}
+            </a>
           </aside>
         </div>
       </section>

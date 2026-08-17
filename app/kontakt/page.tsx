@@ -7,7 +7,7 @@ import { Icon, SectionHead } from "@/components/ui";
 
 export const metadata: Metadata = {
   title: "Kontakt — objednajte čistenie",
-  description: `Objednajte profesionálne čistenie v Bratislave a okolí. Volajte ${site.phone} alebo napíšte na ${site.email}. Bezplatná cenová ponuka do 24 hodín.`,
+  description: `Objednajte profesionálne čistenie v Bratislave a okolí. Napíšte na ${site.email} alebo vyplňte formulár. Bezplatná cenová ponuka do 24 hodín.`,
   alternates: { canonical: `${site.url}/kontakt` },
 };
 
@@ -37,15 +37,6 @@ export default function ContactPage() {
               Kontaktné <span>údaje</span>
             </h2>
             <div className="contact-list">
-              <a className="contact-row" href={`tel:${site.phoneHref}`}>
-                <span className="icon-badge">
-                  <Icon name="phone" />
-                </span>
-                <span>
-                  <small>Telefón</small>
-                  <strong>{site.phone}</strong>
-                </span>
-              </a>
               <a className="contact-row" href={`mailto:${site.email}`}>
                 <span className="icon-badge">
                   <Icon name="mail" />
@@ -55,17 +46,6 @@ export default function ContactPage() {
                   <strong>{site.email}</strong>
                 </span>
               </a>
-              <div className="contact-row">
-                <span className="icon-badge">
-                  <Icon name="users" />
-                </span>
-                <span>
-                  <small>Kontaktná osoba</small>
-                  <strong>
-                    {site.contactPerson} — {site.contactRole}
-                  </strong>
-                </span>
-              </div>
               <div className="contact-row">
                 <span className="icon-badge">
                   <Icon name="pin" />
