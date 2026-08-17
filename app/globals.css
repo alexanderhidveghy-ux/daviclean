@@ -304,8 +304,12 @@ button { font: inherit; }
 .service-photo img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s cubic-bezier(0.2, 0.75, 0.25, 1); }
 .service-card:hover .service-photo img { transform: scale(1.06); }
 .service-photo::after {
-  content: ""; position: absolute; inset: 0;
+  content: ""; position: absolute; inset: 0; z-index: 1;
   background: linear-gradient(180deg, rgba(5, 8, 13, 0) 40%, rgba(5, 8, 13, 0.9) 100%);
+  /* Obrázok sa pri prejdení myšou zväčšuje a tým dostane vlastnú kompozitnú vrstvu.
+     Bez z-indexu a vlastnej vrstvy aj pre stmavenie ho počas animácie prekryje —
+     na okamih vidno fotku bez stmavenia a text v spodku karty stratí kontrast. */
+  transform: translateZ(0);
 }
 .service-body { display: flex; flex-direction: column; flex: 1; padding: 0 22px 22px; }
 .service-body > .icon-badge { margin: -23px 0 16px; background: rgba(10, 16, 24, 0.92); backdrop-filter: blur(10px); }
