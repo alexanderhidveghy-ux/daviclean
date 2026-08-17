@@ -161,10 +161,16 @@ Endpoint volá platené API, preto má v [`lib/rate-limit.ts`](lib/rate-limit.ts
 
 | Vrstva | Limit |
 |---|---|
+| Krajina | len Slovensko (`ALLOWED_COUNTRIES`, napr. `SK,CZ`) |
 | Odstup medzi volaniami z jednej IP | 15 sekúnd |
 | Na IP za hodinu | 3 analýzy |
 | Na IP za deň | 10 analýz |
 | Všetci dokopy za deň | 200 analýz |
+
+Geoblokácia ([`lib/geo.ts`](lib/geo.ts)) je **zámerne len na tomto endpointe**, nie na celom
+webe. Googlebot lezie z amerických IP adries — blokovanie mimo SR by web postupne vyradilo
+z výsledkov vyhľadávania. Lokálny vývoj hlavičku `x-vercel-ip-country` nedostane, preto sa
+tam neblokuje.
 
 K tomu kontrola typu súboru (JPG/PNG/WEBP), limit 6 MB a `detail: "low"`, čo drží
 spotrebu na ~130 tokenov na fotku.

@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { services } from "@/lib/site";
 import { checkRateLimit, PHOTO_ANALYSIS_LIMITS } from "@/lib/rate-limit";
+import { checkCountry } from "@/lib/geo";
 
 export const runtime = "nodejs";
 
@@ -38,6 +39,20 @@ export async function POST(request: Request) {
     return NextResponse.json(
       { error: "Analýza fotiek nie je nastavená. Popíšte nám prosím zákazku slovami." },
       { status: 503 },
+    );
+  }
+
+  /* analýzu púšťame len zo Slovenska — endpoint volá platené API.
+     Zvyšok webu zostáva dostupný odkiaľkoľvek (kvôli Googlebotu). */
+  const geo = checkCountry(request);
+  if (!geo.allowed) {
+    console.warn(`[daviclean] Analýza odmietnutá, krajina: ${geo.country}`);
+    return NextResponse.json(
+      {
+        error:
+          "Automatické posúdenie fotky je dostupné len zo Slovenska. Popíšte nám prosím zákazku vo formulári — ozveme sa s ponukou rovnako rýchlo.",
+      },
+      { status: 403 },
     );
   }
 
