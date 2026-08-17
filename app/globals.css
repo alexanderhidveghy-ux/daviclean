@@ -227,13 +227,41 @@ button { font: inherit; }
 
 .hero-visual { position: relative; }
 .hero-photo {
-  aspect-ratio: 4 / 3.4; border-radius: 20px; border: 1px solid var(--line-strong);
+  /* fotky sú 16:9, preto trochu širší pomer — menší orez ako pri 4:3.4 */
+  aspect-ratio: 4 / 3.2; border-radius: 20px; border: 1px solid var(--line-strong);
   background: linear-gradient(150deg, #16212e, #0a1119 70%);
   box-shadow: 0 40px 90px rgba(0, 0, 0, 0.55); overflow: hidden; position: relative;
+  display: block;
 }
 .hero-photo img { width: 100%; height: 100%; object-fit: cover; }
+
+/* striedanie fotiek — prelínanie krytím, žiadny posun rozloženia */
+.hero-slide { position: absolute; inset: 0; opacity: 0; transition: opacity 900ms ease; pointer-events: none; }
+.hero-slide.is-active { opacity: 1; pointer-events: auto; }
+.hero-caption {
+  position: absolute; left: 0; right: 0; bottom: 0; z-index: 2; padding: 60px 22px 20px;
+  background: linear-gradient(180deg, rgba(5, 8, 13, 0) 0%, rgba(5, 8, 13, 0.88) 72%);
+  pointer-events: none;
+}
+.hero-caption-label {
+  display: block; font-family: var(--mono); font-size: 9.5px; letter-spacing: 0.16em;
+  text-transform: uppercase; color: var(--blue-bright); margin-bottom: 5px;
+}
+.hero-caption strong {
+  display: block; font-family: var(--heading); font-size: 18px; font-weight: 700;
+  letter-spacing: -0.03em; color: #fff; animation: caption-in 500ms ease both;
+}
+@keyframes caption-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+.hero-dots { position: absolute; right: 18px; bottom: 18px; z-index: 3; display: flex; gap: 6px; }
+.hero-dots button {
+  width: 8px; height: 8px; padding: 0; border: 0; border-radius: 99px; cursor: pointer;
+  background: rgba(255, 255, 255, 0.4); transition: width 0.3s, background 0.3s;
+}
+.hero-dots button:hover { background: rgba(255, 255, 255, 0.75); }
+.hero-dots button[aria-current="true"] { width: 22px; background: var(--blue); }
+/* hore vľavo — dole je popis fotky a bodky slidera */
 .hero-badge {
-  position: absolute; left: -18px; bottom: 26px; padding: 16px 20px; border-radius: 15px;
+  position: absolute; left: -18px; top: 24px; padding: 16px 20px; border-radius: 15px;
   background: rgba(10, 16, 24, 0.94); border: 1px solid var(--line-strong);
   box-shadow: 0 24px 50px rgba(0, 0, 0, 0.5); backdrop-filter: blur(14px);
   display: flex; align-items: center; gap: 13px;
@@ -802,7 +830,7 @@ a.contact-row:hover { background: var(--card-bg) padding-box, var(--card-edge-ho
 /* parallax fotiek cez scroll-driven animácie — bez JS, tam kde to prehliadač vie */
 @supports (animation-timeline: view()) {
   @media (prefers-reduced-motion: no-preference) {
-    .hero-photo img, .detail-photo img, .gallery-item img {
+    .detail-photo img, .gallery-item img {
       animation: photo-drift linear both;
       animation-timeline: view();
       animation-range: cover 0% cover 100%;
@@ -819,6 +847,8 @@ a.contact-row:hover { background: var(--card-bg) padding-box, var(--card-edge-ho
   .site-header, .route-fade { animation: none; }
   .marquee-track { animation: none; }
   .drawer, .drawer.is-closing, .drawer-backdrop, .drawer-backdrop.is-closing { animation: none; }
+  .hero-slide { transition: none; }
+  .hero-caption strong { animation: none; }
   .reveal, .reveal.is-visible { opacity: 1; transform: none; transition: none; }
 }
 
@@ -867,7 +897,7 @@ a.contact-row:hover { background: var(--card-bg) padding-box, var(--card-edge-ho
   .stat .icon-badge svg { width: 18px; height: 18px; }
   .stat strong { font-size: 20px; }
   .stat > div span { font-size: 11.5px; line-height: 1.35; }
-  .hero-badge { left: 12px; bottom: 12px; }
+  .hero-badge { left: 12px; top: 12px; }
   .cta-band { flex-direction: column; align-items: flex-start; }
   .cta-band h2 { max-width: none; }
   .cta-actions { width: 100%; }

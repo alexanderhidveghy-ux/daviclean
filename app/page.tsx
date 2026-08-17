@@ -22,9 +22,24 @@ import {
 } from "@/components/sections";
 import { ContactForm } from "@/components/contact-form";
 import { OrderButton } from "@/components/order-drawer";
+import { HeroSlider } from "@/components/hero-slider";
 import { photo } from "@/lib/images";
 
+/* prierez kategóriami: domácnosť, auto, exteriér, firmy */
+const HERO_SLUGS = [
+  "tepovanie-gaucov-a-sedaciek",
+  "cistenie-aut-interier",
+  "cistenie-kobercov",
+  "tlakove-cistenie-dlazby-a-fasad",
+  "hlbkove-cistenie-kancelarii",
+];
+
 export default function HomePage() {
+  const heroSlides = HERO_SLUGS.map((slug) => {
+    const service = services.find((s) => s.slug === slug)!;
+    return { src: photo(`sluzby/${slug}`), title: service.title, href: `/sluzby/${slug}` };
+  });
+
   return (
     <>
       {/* ---------------- HERO ---------------- */}
@@ -67,10 +82,7 @@ export default function HomePage() {
           </div>
 
           <Reveal className="hero-visual" delay={140}>
-            <div className="hero-photo">
-              {/* Kým v /public/images nie je hero.jpg, použije sa SVG placeholder */}
-              <img src={photo("hero")} alt="Daviclean — hĺbkové čistenie sedačiek a interiérov" />
-            </div>
+            <HeroSlider slides={heroSlides} />
             <div className="hero-badge">
               <ShieldCheck size={26} color="#52a8ff" />
               <div>
