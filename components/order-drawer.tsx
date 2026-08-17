@@ -18,6 +18,7 @@ import {
   site,
 } from "@/lib/site";
 import { ContactForm } from "@/components/contact-form";
+import { PhotoAnalyzer, type PhotoResult } from "@/components/photo-analyzer";
 
 /** `open` vie voliteľne predvyplniť službu vo formulári v paneli. */
 type DrawerContext = { open: (service?: string) => void; close: () => void };
@@ -200,6 +201,7 @@ function Drawer({
 }) {
   const [closing, setClosing] = useState(false);
   const [summary, setSummary] = useState("");
+  const [photo, setPhoto] = useState<PhotoResult | null>(null);
   const panelRef = useRef<HTMLDivElement>(null);
 
   const requestClose = useCallback(() => setClosing(true), []);
@@ -227,6 +229,14 @@ function Drawer({
   }, [closing, onClose]);
 
   const handleSummary = useCallback((value: string) => setSummary(value), []);
+
+  /* do dopytu ide kalkulačka aj posúdenie fotky, podľa toho čo zákazník vyplnil */
+  const podklad = [
+    summary && `Kalkulačka:\n${summary}`,
+    photo?.summary && `Posúdenie fotky:\n${photo.summary}`,
+  ]
+    .filter(Boolean)
+    .join("\n\n");
 
   return (
     <div
@@ -262,14 +272,16 @@ function Drawer({
             v Bratislave stíhame do 24 – 48 hodín.
           </p>
 
-          <h3>Zavolajte nám</h3>
+          <h3>{site.phone ? "Zavolajte nám" : "Ozvite sa nám"}</h3>
           <p className="drawer-hours">
             <Clock size={15} /> {site.hours}
           </p>
           <div className="drawer-contacts">
-            <a href={`tel:${site.phoneHref}`}>
-              <Phone size={16} /> {site.phone}
-            </a>
+            {site.phone && (
+              <a href={`tel:${site.phoneHref}`}>
+                <Phone size={16} /> {site.phone}
+              </a>
+            )}
             <a href={`mailto:${site.email}`}>
               <Mail size={16} /> {site.email}
             </a>
@@ -281,8 +293,18 @@ function Drawer({
           <h3>Orientačná cena</h3>
           <Calculator onSummary={handleSummary} />
 
+          <h3>Fotka zákazky</h3>
+          <p className="drawer-optional">
+            Nepovinné, ale výrazne to urýchli — z fotky rovno odhadneme službu aj cenu.
+          </p>
+          <PhotoAnalyzer compact onResult={setPhoto} />
+
           <h3>Nezáväzný dopyt</h3>
-          <ContactForm summary={summary} preselect={service} />
+          <ContactForm
+            summary={podklad}
+            summaryLabel="Podklad k dopytu"
+            preselect={service ?? photo?.service}
+          />
         </div>
       </aside>
     </div>

@@ -926,3 +926,15 @@ a.contact-row:hover { background: var(--card-bg) padding-box, var(--card-edge-ho
   .drawer .form-grid { grid-template-columns: 1fr; }
   .calc-label { font-size: 13.5px; }
 }
+
+/* nahrávanie fotky v paneli — kompaktnejšia podoba */
+.drawer-optional { margin: -6px 0 14px; color: var(--muted); font-size: 13.5px; }
+.pq-upload.is-compact { padding: 16px; border-radius: 14px; }
+.pq-upload.is-compact .pq-drop { padding: 20px 16px; gap: 9px; }
+.pq-upload.is-compact .pq-drop strong { font-size: 15px; }
+.pq-upload.is-compact .pq-drop p { font-size: 12.5px; }
+.pq-upload.is-compact .pq-preview img { max-height: 240px; }
+.pq-upload.is-compact .pq-buttons { margin-top: 12px; gap: 8px; }
+.pq-upload.is-compact .pq-buttons .btn { flex: 1 1 120px; }
+.pq-upload.is-compact .pq-result { margin-top: 14px; padding: 18px; }
+.pq-upload.is-compact .pq-result h3 { font-size: 18px; }
