@@ -430,7 +430,7 @@ button { font: inherit; }
 .price-card li b { font-family: var(--mono); font-variant-numeric: tabular-nums; color: var(--blue-bright); font-weight: 700; font-size: 13px; white-space: nowrap; }
 .price-card li em { display: block; font-style: normal; color: var(--muted-2); font-size: 11.5px; }
 .price-note {
-  margin-top: 24px; padding: 18px 22px; border: 1px solid var(--line); border-left: 3px solid var(--blue);
+  margin-top: 24px; padding: 18px 22px; border: 1px solid var(--line);
   border-radius: 12px; background: var(--panel); color: var(--muted); font-size: 14px;
 }
 
@@ -516,7 +516,10 @@ a.contact-row:hover { background: var(--card-bg) padding-box, var(--card-edge-ho
   transition: transform 0.28s, background 0.28s;
 }
 .gallery-item:hover { transform: translateY(-5px); background: var(--card-bg) padding-box, var(--card-edge-hot) border-box; }
-.gallery-item img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; }
+/* fotky sú 16:9 — pomer 16:10 ich oreže výrazne menej ako pôvodné 4:3 */
+.gallery-photo { display: block; position: relative; aspect-ratio: 16 / 10; overflow: hidden; background: var(--panel-3); }
+.gallery-photo img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.55s cubic-bezier(0.2, 0.75, 0.25, 1); }
+.gallery-item:hover .gallery-photo img { transform: scale(1.05); }
 .gallery-item figcaption { padding: 14px 18px; font-family: var(--mono); color: var(--muted); font-size: 11.5px; }
 
 /* ---------- podstránky ---------- */
@@ -837,7 +840,7 @@ a.contact-row:hover { background: var(--card-bg) padding-box, var(--card-edge-ho
 /* parallax fotiek cez scroll-driven animácie — bez JS, tam kde to prehliadač vie */
 @supports (animation-timeline: view()) {
   @media (prefers-reduced-motion: no-preference) {
-    .detail-photo img, .gallery-item img {
+    .detail-photo img {
       animation: photo-drift linear both;
       animation-timeline: view();
       animation-range: cover 0% cover 100%;

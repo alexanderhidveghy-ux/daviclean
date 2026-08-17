@@ -53,7 +53,11 @@ export default function ReferencesPage() {
             {gallery.map((item, i) => (
               <Reveal key={item.src} delay={(i % 3) * 70}>
                 <figure className="gallery-item">
-                  <img src={item.src} alt={item.alt} loading="lazy" />
+                  {/* fotka má vlastný orezávací rámec, inak by pri zväčšení
+                      pretiekla cez popis pod ňou */}
+                  <span className="gallery-photo">
+                    <img src={item.src} alt={item.alt} loading="lazy" />
+                  </span>
                   <figcaption>{item.alt}</figcaption>
                 </figure>
               </Reveal>
