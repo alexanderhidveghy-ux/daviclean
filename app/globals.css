@@ -298,7 +298,10 @@ button { font: inherit; }
 .service-grid.bento > *:nth-child(-n + 2) { grid-column: span 3; }
 
 .service-card { padding: 0; overflow: hidden; height: 100%; display: flex; flex-direction: column; }
-.service-photo { position: relative; display: block; aspect-ratio: 16 / 10; overflow: hidden; background: var(--panel-3); }
+/* isolation: isolate spraví z fotky samostatný kontext vrstvenia — stmavenie sa
+   tak dostane nad zväčšovaný obrázok bez toho, aby potrebovalo vlastnú
+   kompozitnú vrstvu (tá sa pri posune karty o -5 px oneskorovala a dole vznikala medzera) */
+.service-photo { position: relative; isolation: isolate; display: block; aspect-ratio: 16 / 10; overflow: hidden; background: var(--panel-3); }
 .bento > *:nth-child(-n + 2) .service-photo { aspect-ratio: 2 / 1; }
 .bento > *:nth-child(-n + 2) .service-card h3 { font-size: 23px; }
 .service-photo img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s cubic-bezier(0.2, 0.75, 0.25, 1); }
@@ -306,10 +309,6 @@ button { font: inherit; }
 .service-photo::after {
   content: ""; position: absolute; inset: 0; z-index: 1;
   background: linear-gradient(180deg, rgba(5, 8, 13, 0) 40%, rgba(5, 8, 13, 0.9) 100%);
-  /* Obrázok sa pri prejdení myšou zväčšuje a tým dostane vlastnú kompozitnú vrstvu.
-     Bez z-indexu a vlastnej vrstvy aj pre stmavenie ho počas animácie prekryje —
-     na okamih vidno fotku bez stmavenia a text v spodku karty stratí kontrast. */
-  transform: translateZ(0);
 }
 .service-body { display: flex; flex-direction: column; flex: 1; padding: 0 22px 22px; }
 /* ikona presahuje nad fotku, preto musí byť nad jej stmavením (z-index 1) */
