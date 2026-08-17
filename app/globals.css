@@ -312,7 +312,11 @@ button { font: inherit; }
   transform: translateZ(0);
 }
 .service-body { display: flex; flex-direction: column; flex: 1; padding: 0 22px 22px; }
-.service-body > .icon-badge { margin: -23px 0 16px; background: rgba(10, 16, 24, 0.92); backdrop-filter: blur(10px); }
+/* ikona presahuje nad fotku, preto musí byť nad jej stmavením (z-index 1) */
+.service-body > .icon-badge {
+  position: relative; z-index: 2;
+  margin: -23px 0 16px; background: rgba(10, 16, 24, 0.92); backdrop-filter: blur(10px);
+}
 .service-card h3 { margin: 0 0 10px; font-size: 19px; letter-spacing: -0.035em; }
 .service-card p { color: var(--muted); font-size: 13.5px; margin-bottom: 18px; }
 .service-meta {
